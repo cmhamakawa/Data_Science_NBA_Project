@@ -116,4 +116,22 @@ From the above graph, we see that the point of inflection or “elbow” occurs 
 
 From the above scores we notice that they are consistently around high 50s with some slight evidence of overfitting in the data. These results taught us that we needed more data in order to better predict salary as each model would max out at these scores even after using cross validation. These findings led us to our next idea which involved adding previous year salary for each veteran in the original data set. Since we earlier found that not any one player statistic directly correlated with salary, then adding previous year salary would be a good indicator as to what a player would make the following year. After adding previous year salary to the data set and redoing the above steps, we achieved much better results (around 90% for Veterans for each model for each score and near perfect for Rookies for each model and each score). These steps were implemented in our final model in which we used both classification and regression models. 
 
+## Classification with Regression
+ 
+After evaluating all our models, we came to the conclusion that classification with regression would yield the best outcome. Having grouped our data by players with years of experience equal to 1 (i.e. Rookies) and experienced players (i.e. Veterans), we proceeded to further create subgroups in an effort to reduce variation. By using K-Means clustering, we achieved this task and landed on creating three separate sub groups across both the Rookie and Veteran subsets.
+
+Based on previous feature selection from earlier, we knew what subsets of columns could be considered good predictors for both the Rookie and Veterans subsets. At this point in time, we decided to transition from pure regression techniques to XGBoost. XGBoost is a decision-tree based algorithm that incorporates gradient boosting. What this means is that XGBoost minimizes errors in sequential models, and in turn is well tuned to medium data that is structured or tabular - like our NBA dataset.
+
+Once more we use RMSE as a measure of how well our model is predicting salaries. At the end of the day, RMSE is simply a standard way to measure the error in a model. Heuristically, RMSE can be considered to be the “normalized distance” between for example a vector of observed values and a vector of predicted values. After optimizing hyperparameters with XGBoost in an effort to decrease RMSE, we ended with the following results:
+
+<img width="634" alt="dsu_15" src="https://user-images.githubusercontent.com/76538403/111925097-a8e6e900-8a64-11eb-850d-d564d6579eba.png">
+
+
+The results of XGBoost can be illustrated in the below plots which look at how well our predicted results line up with the actual observed values. On the x-axis, we have a sample of 100 players from each of the subsets (Rookies and Veterans). On the y-axis, we have their salary: both predicted by our model and the actual observed value.
+
+<img width="648" alt="dsu_16" src="https://user-images.githubusercontent.com/76538403/111925102-ad130680-8a64-11eb-852c-28ab657f1d63.png">
+
+<img width="670" alt="dsu_17" src="https://user-images.githubusercontent.com/76538403/111925111-b4d2ab00-8a64-11eb-8a3f-0d67867d6555.png">
+
+From the above plots, it’s clear that our Veteran model typically outperforms our model for Rookie players. The reason for this discrepancy can likely be attributed to the fact that our Veteran model takes into account a player’s salary the season before when predicting a player’s salary for the next season. The Rookie model does not have this luxury seeing as Rookie player salaries are modeled based on raw stats alone and not their salary from a previous year. 
 
