@@ -1,4 +1,4 @@
-# Data_Science_NBA_Project
+# Predicting NBA Players' Salaries
 Our project aims to predict NBA players' annual salaries based on their game statistics using machine learning.
 
 Try it out! 
