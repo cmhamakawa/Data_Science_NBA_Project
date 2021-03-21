@@ -58,3 +58,62 @@ From the last two visuals, we were able to see that our model would somehow have
 
 This section does not cover all of our data visualizations: it simply covers the major observations we made. We further cover in detail our visualizations for each model in the following sections.
 
+
+# Machine Learning Models
+## Regression
+### Ridge Regression
+
+Ridge Regression is similar to standard linear regression, but it adds a penalty to the weight matrix, performing L2 regularization. This helps alleviate the effects of interdependence of different variables. In our dataset, it was anticipated that different variables would be highly correlated. For example, years of experience would probably yield higher points, assists, etc. due to the added experience. For this reason, Ridge Regression seemed like a good idea to try. Overall, the results were not very good. The R-squared score was 0.272. R-squared generally ranges from 0-1, 0 meaning no learning occurred, 1 meaning the model has learned perfectly. Note: the R-squared score can be negative. It essentially means the same as 0 (nothing learned). When testing on the rookie dataset, the RMSE score was 1,190,732 which is also quite high considering that averages were in the low millions.
+
+### Lasso Regression
+
+To predict Salary (and Per_of_Salary_Cap initially), we tried using lasso regression because of its regularization and feature selection properties. Lasso regression is very similar to ridge regression in that it adds a penalty value to the simple linear regression model to prevent overfitting. Lasso regression is also useful for feature selection because it is able to reduce coefficients of insignificant variables in the model to 0. 
+
+For the most part, lasso regression was not very effective at predicting Salary. With our best subset of predictors (FG, FTA, AST, TRB, PTS, BLK, SalStartYr, TDV, Age, G, Pos), lasso regression had mediocre performance at best, predicting rookie salaries with an R2 score of 0.47615 and RMSE of 1214715.13122, and predicting veteran salaries with an R2 score of 0.59326 and RMSE of 3067946.81366. It performed even worse for clusters within the rookie and veteran groups, with most tests never reaching an R2 score above 0.2 and having a very high RMSE. The one exception was Cluster 1 of the rookies, which had an R2 score of 0.50758 and an RMSE of 1033420.19457. Lasso regression was ultimately not as successful at predicting Salary as classification models we used, but it did help point us to which variables were best at predicting Salary.
+
+<img width="653" alt="dsu_9" src="https://user-images.githubusercontent.com/76538403/111924812-81435100-8a63-11eb-961e-4a0e7393f6cb.png">
+
+<img width="479" alt="dsu_10" src="https://user-images.githubusercontent.com/76538403/111924824-886a5f00-8a63-11eb-8a37-c029fe65c180.png">
+
+<img width="503" alt="dsu_11" src="https://user-images.githubusercontent.com/76538403/111924829-8d2f1300-8a63-11eb-9eaa-4469feff428a.png">
+
+**Note**: The blue dashed line at the x-axis means that the coefficient of the variable is 0. If a variable’s coefficient is 0, this means that the variable is insignificant.
+
+### Gradient Boost Regression
+Gradient boost regression is a type of machine learning boosting model. This means that it uses several different models, with each successive model trying to correct the errors of the last. Gradient boosting aims to predict the target outcomes for the next model to minimize error. The target outcomes are based on the gradient of the error with respect to the prediction.
+
+With regards to our project, gradient boost regression was more accurate when we were predicting the percent of salary cap. The predictors that were used years_of_exp, MP, GS, PTS, FG, AST, STL, BLK, FTA. And, with gradient boosting, we had an R2 score of 0.6750. But, when we switched to predicting actual salary, gradient boost regression did not prove to be useful. The results when predicting salary were worse than predicting percent of salary cap, regardless of the predictors used.
+
+
+### Linear Regression
+Initially, we tried linear and polynomial regression using all the predictors to see results. We had two different analysts try linear and polynomial regression.
+
+The results from the first linear and polynomial regression models we tried are shown below. This used all players (rookies and veterans) to predict a percent of the total salary cap. Our validation results were:
+Linear Regression: R2 score .597
+Polynomial Regression (Deg 2): R2 score 0.627
+Polynomial Regression (Deg 3): R2 score -10.9
+Choosing the best (degree 2), the test results were an R2 score of 0.66 with an RMSE of 0.052. It should be noted that because this was predicting percentages, the RMSE is much lower.
+
+The  results from the second linear and polynomial regression models we tried are also shown below.
+
+Predicting Per_of_Salary_Cap using linear regression
+R2: 0.579
+RMSE: 0.05739
+
+<img width="643" alt="dsu_12" src="https://user-images.githubusercontent.com/76538403/111924906-ee56e680-8a63-11eb-8280-6dfec4bffedb.png">
+
+<img width="633" alt="dsu_13" src="https://user-images.githubusercontent.com/76538403/111924911-f3b43100-8a63-11eb-9c1c-0fea7221edfe.png">
+
+
+## Classification
+
+We also wanted to attempt some pure classification models in order to predict salary groupings rather than a specific number. Starting with our cleaned data set, we first used clustering in order to cluster the salary data and see if there was any relationship between players’ stats and their respective salary cluster. In order to find the optimal number of salary clusters, we used the elbow method, testing values 1 - 10 and found 4 to be the optimal number of clusters. Thus, each row had a cluster number (0,1,2,3) which we appended to the data set. 
+
+From the above graph, we see that the point of inflection or “elbow” occurs at k = 4. From here, we then implemented some classification models to see how well we could predict cluster values (0,1,2,3), which corresponds to a range of salary values. In other words, we wanted to use player data/statistics to predict what salary cluster they might end up in. We implemented 4 models: logistic regression, decision tree, random forest, and support vector machine. The score for the classification models were as follows:
+
+<img width="634" alt="dsu_14" src="https://user-images.githubusercontent.com/76538403/111924966-21997580-8a64-11eb-9351-4ab44370b463.png">
+
+
+From the above scores we notice that they are consistently around high 50s with some slight evidence of overfitting in the data. These results taught us that we needed more data in order to better predict salary as each model would max out at these scores even after using cross validation. These findings led us to our next idea which involved adding previous year salary for each veteran in the original data set. Since we earlier found that not any one player statistic directly correlated with salary, then adding previous year salary would be a good indicator as to what a player would make the following year. After adding previous year salary to the data set and redoing the above steps, we achieved much better results (around 90% for Veterans for each model for each score and near perfect for Rookies for each model and each score). These steps were implemented in our final model in which we used both classification and regression models. 
+
+
