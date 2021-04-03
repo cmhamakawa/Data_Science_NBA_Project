@@ -1,7 +1,7 @@
 # Predicting NBA Players' Salaries
 Our project aims to predict NBA players' annual salaries based on their game statistics using machine learning.
 
-Try it out! 
+**Try it out!** 
 https://nba-salary-predictor.herokuapp.com/
 
 # Project Overview
